@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PadhAI — Apni Bhasha Mein Seekho</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Noto+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --saffron: #FF6B35;
+    --deep-saffron: #E55A25;
+    --gold: #FFB830;
+    --sky: #00C9A7;
+    --deep-sky: #009E83;
+    --navy: #1A1A2E;
+    --card-bg: #FFFFFF;
+    --page-bg: #F7F4EF;
+    --text: #1A1A2E;
+    --muted: #6B6B8A;
+    --border: #E8E4DC;
+    --premium: #7C3AED;
+    --premium-light: #EDE9FE;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Noto Sans', sans-serif;
+    background: var(--page-bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, .heading {
+    font-family: 'Baloo 2', cursive;
+  }
+
+  /* ── SCREENS ── */
+  .screen { display: none; min-height: 100vh; }
+  .screen.active { display: block; }
+
+  /* ══════════════════════════════
+     SPLASH / ONBOARDING
+  ══════════════════════════════ */
+  #splash {
+    background: linear-gradient(145deg, #1A1A2E 0%, #16213E 60%, #0F3460 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px 24px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  #splash .bg-circles {
+    position: absolute; inset: 0; pointer-events: none;
+  }
+  #splash .bg-circles span {
+    position: absolute; border-radius: 50%; opacity: 0.07;
+    background: var(--saffron);
+    animation: pulse 4s ease-in-out infinite;
+  }
+  #splash .bg-circles span:nth-child(1) { width: 400px; height: 400px; top: -100px; right: -80px; animation-delay: 0s; }
+  #splash .bg-circles span:nth-child(2) { width: 250px; height: 250px; bottom: 40px; left: -60px; animation-delay: 1.5s; background: var(--sky); }
+  #splash .bg-circles span:nth-child(3) { width: 180px; height: 180px; top: 40%; left: 30%; animation-delay: 0.8s; background: var(--gold); }
+
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 0.07; }
+    50% { transform: scale(1.1); opacity: 0.12; }
+  }
+
+  .app-logo {
+    width: 90px; height: 90px;
+    background: linear-gradient(135deg, var(--saffron), var(--gold));
+    border-radius: 24px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 44px;
+    margin-bottom: 20px;
+    box-shadow: 0 20px 40px rgba(255,107,53,0.35);
+    animation: logoFloat 3s ease-in-out infinite;
+  }
+  @keyframes logoFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+
+  .app-name {
+    font-family: 'Baloo 2', cursive;
+    font-size: 42px;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: -1px;
+    line-height: 1;
+  }
+  .app-name span { color: var(--gold); }
+
+  .app-tagline {
+    color: rgba(255,255,255,0.65);
+    font-size: 15px;
+    margin: 10px 0 40px;
+    letter-spacing: 0.3px;
+  }
+
+  .subject-pills {
+    display: flex; flex-wrap: wrap; gap: 8px;
+    justify-content: center;
+    margin-bottom: 40px;
+  }
+  .subject-pill {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: #fff;
+    padding: 7px 16px;
+    border-radius: 40px;
+    font-size: 13px;
+    font-family: 'Baloo 2', cursive;
+    font-weight: 500;
+  }
+
+  .btn-start {
+    background: linear-gradient(135deg, var(--saffron), var(--gold));
+    color: #fff;
+    border: none;
+    padding: 16px 48px;
+    border-radius: 50px;
+    font-size: 17px;
+    font-family: 'Baloo 2', cursive;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 8px 24px rgba(255,107,53,0.4);
+    transition: transform 0.2s, box-shadow 0.2s;
+    letter-spacing: 0.3px;
+  }
+  .btn-start:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(255,107,53,0.5); }
+  .btn-start:active { transform: scale(0.97); }
+
+  .trust-row {
+    margin-top: 28px;
+    color: rgba(255,255,255,0.45);
+    font-size: 12px;
+  }
+  .trust-row strong { color: rgba(255,255,255,0.75); }
+
+  /* ══════════════════════════════
+     HOME SCREEN
+  ══════════════════════════════ */
+  #home {
+    background: var(--page-bg);
+    padding-bottom: 80px;
+  }
+
+  .top-bar {
+    background: linear-gradient(135deg, var(--saffron) 0%, var(--deep-saffron) 100%);
+    padding: 20px 20px 28px;
+    position: relative;
+    overflow: hidden;
+  }
+  .top-bar::after {
+    content: '';
+    position: absolute;
+    bottom: -1px; left: 0; right: 0;
+    height: 24px;
+    background: var(--page-bg);
+    border-radius: 24px 24px 0 0;
+  }
+
+  .top-bar-inner {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 16px;
+  }
+  .greeting { color: rgba(255,255,255,0.8); font-size: 13px; }
+  .user-name { color: #fff; font-family: 'Baloo 2', cursive; font-size: 20px; font-weight: 700; line-height: 1.2; }
+  .avatar {
+    width: 42px; height: 42px; border-radius: 50%;
+    background: rgba(255,255,255,0.25);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; border: 2px solid rgba(255,255,255,0.5);
+  }
+
+  .streak-bar {
+    background: rgba(255,255,255,0.15);
+    border-radius: 14px;
+    padding: 10px 14px;
+    display: flex; align-items: center; gap: 10px;
+    backdrop-filter: blur(4px);
+  }
+  .streak-icon { font-size: 22px; }
+  .streak-text { color: #fff; }
+  .streak-text .big { font-family: 'Baloo 2', cursive; font-size: 18px; font-weight: 700; }
+  .streak-text .small { font-size: 12px; opacity: 0.8; }
+  .xp-badge {
+    margin-left: auto;
+    background: rgba(255,184,48,0.25);
+    border: 1px solid rgba(255,184,48,0.5);
+    color: var(--gold);
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-family: 'Baloo 2', cursive;
+    font-size: 13px; font-weight: 700;
+  }
+
+  .section { padding: 18px 20px 0; }
+  .section-title {
+    font-family: 'Baloo 2', cursive;
+    font-size: 17px; font-weight: 700;
+    color: var(--text);
+    margin-bottom: 12px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .see-all { font-family: 'Noto Sans', sans-serif; font-size: 12px; color: var(--saffron); font-weight: 500; cursor: pointer; }
+
+  /* Subject cards horizontal scroll */
+  .subjects-scroll {
+    display: flex; gap: 12px;
+    overflow-x: auto; padding-bottom: 8px;
+    scrollbar-width: none;
+  }
+  .subjects-scroll::-webkit-scrollbar { display: none; }
+
+  .subject-card {
+    flex-shrink: 0;
+    width: 120px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    padding: 14px 10px;
+    text-align: center;
+    cursor: pointer;
+    border: 1.5px solid var(--border);
+    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+    position: relative;
+  }
+  .subject-card:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.1); border-color: var(--saffron); }
+  .subject-card .icon { font-size: 32px; margin-bottom: 8px; }
+  .subject-card .name { font-family: 'Baloo 2', cursive; font-size: 13px; font-weight: 600; color: var(--text); }
+  .subject-card .lessons { font-size: 11px; color: var(--muted); margin-top: 3px; }
+  .subject-card .lock {
+    position: absolute; top: 8px; right: 8px;
+    width: 20px; height: 20px;
+    background: var(--premium-light);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px;
+  }
+  .subject-card.active-subj { border-color: var(--saffron); background: #FFF5F0; }
+
+  /* Today's lesson */
+  .today-card {
+    background: linear-gradient(135deg, var(--sky), var(--deep-sky));
+    border-radius: 18px;
+    padding: 18px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s;
+  }
+  .today-card:hover { transform: scale(1.01); }
+  .today-card::before {
+    content: '';
+    position: absolute;
+    width: 120px; height: 120px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.1);
+    top: -30px; right: -20px;
+  }
+  .today-label { color: rgba(255,255,255,0.8); font-size: 12px; margin-bottom: 6px; }
+  .today-title { font-family: 'Baloo 2', cursive; font-size: 20px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+  .today-sub { color: rgba(255,255,255,0.8); font-size: 13px; margin-bottom: 14px; }
+  .today-meta { display: flex; align-items: center; gap: 12px; }
+  .meta-pill {
+    background: rgba(255,255,255,0.2);
+    color: #fff;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    display: flex; align-items: center; gap: 5px;
+  }
+  .btn-start-lesson {
+    margin-left: auto;
+    background: #fff;
+    color: var(--deep-sky);
+    border: none;
+    padding: 8px 18px;
+    border-radius: 24px;
+    font-family: 'Baloo 2', cursive;
+    font-size: 14px; font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.15s;
+  }
+  .btn-start-lesson:hover { transform: scale(1.05); }
+
+  /* Progress cards */
+  .progress-list { display: flex; flex-direction: column; gap: 10px; }
+  .progress-item {
+    background: var(--card-bg);
+    border-radius: 14px;
+    padding: 14px;
+    display: flex; align-items: center; gap: 12px;
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .progress-item:hover { transform: translateX(3px); box-shadow: 0 4px 12px rgba(0,0,0,0.07); }
+  .prog-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
+  .prog-info { flex: 1; }
+  .prog-name { font-family: 'Baloo 2', cursive; font-size: 14px; font-weight: 600; color: var(--text); }
+  .prog-sub { font-size: 12px; color: var(--muted); margin: 2px 0 6px; }
+  .prog-bar-bg { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
+  .prog-bar-fill { height: 100%; border-radius: 3px; transition: width 1s ease; }
+  .prog-pct { font-size: 12px; font-weight: 600; color: var(--muted); flex-shrink: 0; }
+
+  /* ══════════════════════════════
+     LESSON SCREEN
+  ══════════════════════════════ */
+  #lesson {
+    background: var(--page-bg);
+    padding-bottom: 100px;
+  }
+
+  .lesson-header {
+    background: var(--navy);
+    padding: 16px 20px 20px;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .btn-back {
+    background: rgba(255,255,255,0.1);
+    border: none; color: #fff;
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    font-size: 18px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s;
+  }
+  .btn-back:hover { background: rgba(255,255,255,0.2); }
+
+  .lesson-prog-bar {
+    flex: 1;
+    height: 8px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .lesson-prog-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--sky), var(--gold));
+    border-radius: 4px;
+    transition: width 0.5s ease;
+  }
+  .lesson-step-label { color: rgba(255,255,255,0.7); font-size: 12px; flex-shrink: 0; }
+
+  .lesson-content { padding: 20px; }
+
+  .question-card {
+    background: var(--card-bg);
+    border-radius: 20px;
+    padding: 24px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    text-align: center;
+  }
+  .q-emoji { font-size: 56px; margin-bottom: 12px; animation: bounce 2s ease-in-out infinite; }
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+  .q-label { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+  .q-text { font-family: 'Baloo 2', cursive; font-size: 22px; font-weight: 700; color: var(--text); line-height: 1.3; }
+  .q-hindi { font-size: 16px; color: var(--muted); margin-top: 6px; }
+
+  .options-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 10px; margin-bottom: 20px;
+  }
+  .option-btn {
+    background: var(--card-bg);
+    border: 2px solid var(--border);
+    border-radius: 14px;
+    padding: 14px 10px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.2s;
+    font-family: 'Baloo 2', cursive;
+    font-size: 15px; font-weight: 600;
+    color: var(--text);
+  }
+  .option-btn:hover { border-color: var(--saffron); background: #FFF5F0; transform: scale(1.02); }
+  .option-btn.correct { border-color: var(--sky); background: #E6FAF5; color: var(--deep-sky); animation: correctPop 0.4s ease; }
+  .option-btn.wrong { border-color: #EF4444; background: #FEF2F2; color: #DC2626; animation: shake 0.4s ease; }
+  .option-btn.disabled { pointer-events: none; opacity: 0.5; }
+
+  @keyframes correctPop {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.06); }
+    100% { transform: scale(1); }
+  }
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+  }
+
+  .feedback-bar {
+    border-radius: 14px;
+    padding: 14px 16px;
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 16px;
+    font-family: 'Baloo 2', cursive;
+    font-size: 15px; font-weight: 600;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.3s ease;
+  }
+  .feedback-bar.show { opacity: 1; transform: translateY(0); }
+  .feedback-bar.correct { background: #E6FAF5; color: var(--deep-sky); }
+  .feedback-bar.wrong { background: #FEF2F2; color: #DC2626; }
+
+  .btn-next {
+    width: 100%;
+    background: linear-gradient(135deg, var(--saffron), var(--gold));
+    color: #fff;
+    border: none;
+    padding: 16px;
+    border-radius: 14px;
+    font-family: 'Baloo 2', cursive;
+    font-size: 17px; font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 6px 16px rgba(255,107,53,0.3);
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: none;
+  }
+  .btn-next.show { display: block; }
+  .btn-next:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(255,107,53,0.4); }
+
+  /* ══════════════════════════════
+     RESULT SCREEN
+  ══════════════════════════════ */
+  #result {
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    min-height: 100vh;
+    background: linear-gradient(145deg, #1A1A2E, #16213E);
+    padding: 40px 24px;
+    text-align: center;
+  }
+
+  .result-trophy { font-size: 80px; animation: trophyBounce 1s ease; margin-bottom: 20px; }
+  @keyframes trophyBounce {
+    0% { transform: scale(0) rotate(-20deg); opacity: 0; }
+    60% { transform: scale(1.2) rotate(5deg); }
+    100% { transform: scale(1) rotate(0); opacity: 1; }
+  }
+  .result-title { font-family: 'Baloo 2', cursive; font-size: 36px; font-weight: 800; color: #fff; margin-bottom: 8px; }
+  .result-sub { color: rgba(255,255,255,0.6); font-size: 15px; margin-bottom: 32px; }
+
+  .result-stats {
+    display: grid; grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px; width: 100%; max-width: 340px; margin-bottom: 32px;
+  }
+  .stat-box {
+    background: rgba(255,255,255,0.08);
+    border-radius: 14px;
+    padding: 16px 8px;
+    border: 1px solid rgba(255,255,255,0.12);
+  }
+  .stat-num { font-family: 'Baloo 2', cursive; font-size: 28px; font-weight: 800; color: var(--gold); }
+  .stat-lbl { font-size: 11px; color: rgba(255,255,255,0.55); margin-top: 2px; }
+
+  .confetti-emoji {
+    position: fixed; top: 0; left: 0; pointer-events: none;
+    font-size: 24px;
+    animation: fall linear forwards;
+  }
+  @keyframes fall {
+    0% { transform: translateY(-50px) rotate(0); opacity: 1; }
+    100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+  }
+
+  /* ══════════════════════════════
+     PREMIUM SCREEN
+  ══════════════════════════════ */
+  #premium {
+    background: var(--page-bg);
+    padding: 24px 20px 100px;
+  }
+
+  .premium-hero {
+    background: linear-gradient(135deg, #4F46E5, #7C3AED, #9333EA);
+    border-radius: 24px;
+    padding: 28px 24px;
+    text-align: center;
+    margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .premium-hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0 L30 52 L60 0 Z' fill='rgba(255,255,255,0.03)'/%3E%3C/svg%3E");
+  }
+  .crown { font-size: 48px; margin-bottom: 12px; display: block; }
+  .premium-hero h2 { font-family: 'Baloo 2', cursive; font-size: 26px; font-weight: 800; color: #fff; margin-bottom: 8px; }
+  .premium-hero p { color: rgba(255,255,255,0.75); font-size: 14px; line-height: 1.5; }
+
+  .plan-cards { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
+  .plan-card {
+    background: var(--card-bg);
+    border: 2px solid var(--border);
+    border-radius: 18px;
+    padding: 18px;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+  }
+  .plan-card:hover { border-color: var(--premium); transform: scale(1.01); }
+  .plan-card.selected { border-color: var(--premium); background: #F5F3FF; }
+  .plan-card.popular { border-color: var(--saffron); }
+
+  .popular-badge {
+    position: absolute; top: -10px; left: 50%; transform: translateX(-50%);
+    background: var(--saffron);
+    color: #fff;
+    padding: 3px 16px;
+    border-radius: 20px;
+    font-family: 'Baloo 2', cursive;
+    font-size: 12px; font-weight: 700;
+  }
+  .plan-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+  .plan-name { font-family: 'Baloo 2', cursive; font-size: 18px; font-weight: 700; }
+  .plan-price { font-family: 'Baloo 2', cursive; font-size: 22px; font-weight: 800; color: var(--premium); }
+  .plan-per { font-size: 12px; color: var(--muted); }
+  .plan-desc { font-size: 13px; color: var(--muted); }
+  .plan-save { font-size: 12px; font-weight: 600; color: var(--deep-sky); margin-top: 4px; }
+
+  .features-list { margin-bottom: 24px; }
+  .feature-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+  }
+  .feature-item:last-child { border-bottom: none; }
+  .feature-icon { font-size: 20px; width: 32px; text-align: center; }
+
+  .btn-subscribe {
+    width: 100%;
+    background: linear-gradient(135deg, #4F46E5, #7C3AED);
+    color: #fff;
+    border: none;
+    padding: 17px;
+    border-radius: 16px;
+    font-family: 'Baloo 2', cursive;
+    font-size: 18px; font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(124,58,237,0.35);
+    transition: transform 0.2s;
+  }
+  .btn-subscribe:hover { transform: translateY(-2px); }
+  .trial-note { text-align: center; font-size: 12px; color: var(--muted); margin-top: 10px; }
+
+  /* ══════════════════════════════
+     BOTTOM NAV
+  ══════════════════════════════ */
+  .bottom-nav {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    background: var(--card-bg);
+    border-top: 1px solid var(--border);
+    display: flex;
+    padding: 10px 0 16px;
+    z-index: 100;
+  }
+  .nav-item {
+    flex: 1;
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    cursor: pointer;
+    transition: transform 0.2s;
+    border: none; background: none;
+  }
+  .nav-item:hover { transform: translateY(-2px); }
+  .nav-icon { font-size: 22px; transition: transform 0.2s; }
+  .nav-label { font-size: 10px; color: var(--muted); font-weight: 500; }
+  .nav-item.active .nav-label { color: var(--saffron); font-weight: 700; }
+  .nav-item.active .nav-icon { transform: scale(1.15); }
+  .nav-dot {
+    width: 5px; height: 5px;
+    background: var(--saffron);
+    border-radius: 50%;
+    position: absolute;
+    top: -2px; right: -2px;
+    display: none;
+  }
+  .nav-item.active .nav-dot { display: block; }
+  .nav-icon-wrap { position: relative; display: inline-block; }
+</style>
+</head>
+<body>
+
+<!-- ══ SPLASH ══ -->
+<div id="splash" class="screen active">
+  <div class="bg-circles">
+    <span></span><span></span><span></span>
+  </div>
+  <div class="app-logo">📚</div>
+  <div class="app-name">Padh<span>AI</span></div>
+  <p class="app-tagline">Apni Bhasha Mein Seekho · अपनी भाषा में सीखो</p>
+  <div class="subject-pills">
+    <span class="subject-pill">🔢 Maths</span>
+    <span class="subject-pill">📖 Hindi</span>
+    <span class="subject-pill">🔬 Science</span>
+    <span class="subject-pill">🌍 English</span>
+    <span class="subject-pill">📜 GK</span>
+    <span class="subject-pill">✏️ Odia</span>
+  </div>
+  <button class="btn-start" onclick="showHome()">Shuru Karein →</button>
+  <p class="trust-row"><strong>50,000+</strong> bacche roz padhte hain · Free mein shuru karo</p>
+</div>
+
+<!-- ══ HOME ══ -->
+<div id="home" class="screen">
+  <div class="top-bar">
+    <div class="top-bar-inner">
+      <div>
+        <div class="greeting">Namaste! 🙏</div>
+        <div class="user-name">Priya ke Bacche</div>
+      </div>
+      <div class="avatar">👧</div>
+    </div>
+    <div class="streak-bar">
+      <span class="streak-icon">🔥</span>
+      <div class="streak-text">
+        <div class="big">7 din</div>
+        <div class="small">Daily streak — waah!</div>
+      </div>
+      <div class="xp-badge">⭐ 340 XP</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">
+      Subjects <span class="see-all">Sab dekho</span>
+    </div>
+    <div class="subjects-scroll">
+      <div class="subject-card active-subj" onclick="startLesson('math')">
+        <div class="icon">🔢</div>
+        <div class="name">Ganit</div>
+        <div class="lessons">12 lessons</div>
+      </div>
+      <div class="subject-card" onclick="startLesson('hindi')">
+        <div class="icon">📖</div>
+        <div class="name">Hindi</div>
+        <div class="lessons">10 lessons</div>
+      </div>
+      <div class="subject-card" onclick="startLesson('science')">
+        <div class="icon">🔬</div>
+        <div class="name">Vigyan</div>
+        <div class="lessons">8 lessons</div>
+        <div class="lock">🔒</div>
+      </div>
+      <div class="subject-card" onclick="showPremium()">
+        <div class="icon">🌍</div>
+        <div class="name">English</div>
+        <div class="lessons">15 lessons</div>
+        <div class="lock">🔒</div>
+      </div>
+      <div class="subject-card" onclick="showPremium()">
+        <div class="icon">📜</div>
+        <div class="name">GK</div>
+        <div class="lessons">20 lessons</div>
+        <div class="lock">🔒</div>
+      </div>
+      <div class="subject-card" onclick="showPremium()">
+        <div class="icon">✏️</div>
+        <div class="name">Odia</div>
+        <div class="lessons">9 lessons</div>
+        <div class="lock">🔒</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" style="margin-top:16px">
+    <div class="section-title">Aaj ka Lesson</div>
+    <div class="today-card" onclick="startLesson('math')">
+      <div class="today-label">🔢 Ganit · Class 4</div>
+      <div class="today-title">Guna-Bhag</div>
+      <div class="today-sub">Tables aur division seekhenge aaj!</div>
+      <div class="today-meta">
+        <div class="meta-pill">⏱ 8 min</div>
+        <div class="meta-pill">⭐ +20 XP</div>
+        <button class="btn-start-lesson">Start ▶</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" style="margin-top:16px">
+    <div class="section-title">Teri Progress</div>
+    <div class="progress-list">
+      <div class="progress-item" onclick="startLesson('math')">
+        <div class="prog-icon" style="background:#FFF5F0">🔢</div>
+        <div class="prog-info">
+          <div class="prog-name">Ganit</div>
+          <div class="prog-sub">5/12 lessons complete</div>
+          <div class="prog-bar-bg"><div class="prog-bar-fill" style="width:42%; background: linear-gradient(90deg, var(--saffron), var(--gold));"></div></div>
+        </div>
+        <div class="prog-pct">42%</div>
+      </div>
+      <div class="progress-item" onclick="startLesson('hindi')">
+        <div class="prog-icon" style="background:#E6FAF5">📖</div>
+        <div class="prog-info">
+          <div class="prog-name">Hindi</div>
+          <div class="prog-sub">3/10 lessons complete</div>
+          <div class="prog-bar-bg"><div class="prog-bar-fill" style="width:30%; background: linear-gradient(90deg, var(--sky), var(--deep-sky));"></div></div>
+        </div>
+        <div class="prog-pct">30%</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ LESSON ══ -->
+<div id="lesson" class="screen">
+  <div class="lesson-header">
+    <button class="btn-back" onclick="showHome()">←</button>
+    <div class="lesson-prog-bar">
+      <div class="lesson-prog-fill" id="lessonProgFill" style="width:0%"></div>
+    </div>
+    <div class="lesson-step-label" id="stepLabel">1/5</div>
+  </div>
+  <div class="lesson-content" id="lessonContent"></div>
+</div>
+
+<!-- ══ RESULT ══ -->
+<div id="result" class="screen">
+  <div class="result-trophy" id="resultTrophy">🏆</div>
+  <div class="result-title" id="resultTitle">Shabash!</div>
+  <div class="result-sub" id="resultSub">Bahut accha kiya!</div>
+  <div class="result-stats">
+    <div class="stat-box">
+      <div class="stat-num" id="statScore">0</div>
+      <div class="stat-lbl">Sahi jawab</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-num" id="statXP">+0</div>
+      <div class="stat-lbl">XP Mile</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-num">🔥8</div>
+      <div class="stat-lbl">Din ki streak</div>
+    </div>
+  </div>
+  <button class="btn-start" onclick="showHome()">Ghar Wapas Jao 🏠</button>
+  <p style="color:rgba(255,255,255,0.4); font-size:12px; margin-top:14px">Kal phir aana — streak mat todna!</p>
+</div>
+
+<!-- ══ PREMIUM ══ -->
+<div id="premium" class="screen">
+  <div class="premium-hero">
+    <span class="crown">👑</span>
+    <h2>PadhAI Premium</h2>
+    <p>Saare subjects unlock karo, ads hatao, aur apne bacche ko aage badha o!</p>
+  </div>
+
+  <div class="plan-cards">
+    <div class="plan-card" onclick="selectPlan(this, 'monthly')">
+      <div class="plan-head">
+        <div class="plan-name">Monthly</div>
+        <div><span class="plan-price">₹99</span><span class="plan-per">/mahina</span></div>
+      </div>
+      <div class="plan-desc">Shuru karne ke liye best</div>
+    </div>
+
+    <div class="plan-card popular selected" onclick="selectPlan(this, 'quarterly')">
+      <div class="popular-badge">🔥 Sabse Popular</div>
+      <div class="plan-head">
+        <div class="plan-name">3 Mahine</div>
+        <div><span class="plan-price">₹249</span><span class="plan-per">/teen mahine</span></div>
+      </div>
+      <div class="plan-desc">₹83/mahina only</div>
+      <div class="plan-save">✅ ₹48 ki bachat!</div>
+    </div>
+
+    <div class="plan-card" onclick="selectPlan(this, 'yearly')">
+      <div class="plan-head">
+        <div class="plan-name">Saal Bhar 🎯</div>
+        <div><span class="plan-price">₹699</span><span class="plan-per">/saal</span></div>
+      </div>
+      <div class="plan-desc">₹58/mahina only</div>
+      <div class="plan-save">✅ ₹489 ki badi bachat!</div>
+    </div>
+  </div>
+
+  <div class="features-list">
+    <div class="feature-item"><span class="feature-icon">✅</span> Saare 6 subjects unlock</div>
+    <div class="feature-item"><span class="feature-icon">🚫</span> Koi ads nahi</div>
+    <div class="feature-item"><span class="feature-icon">📥</span> Offline padhai</div>
+    <div class="feature-item"><span class="feature-icon">📊</span> Detailed progress report</div>
+    <div class="feature-item"><span class="feature-icon">🎓</span> Certificate milega</div>
+    <div class="feature-item"><span class="feature-icon">👨‍👩‍👧</span> 3 bacchon ke liye ek account</div>
+  </div>
+
+  <button class="btn-subscribe" onclick="showSubscribed()">Abhi Subscribe Karo 👑</button>
+  <p class="trial-note">7 din free trial · Kisi bhi waqt cancel kar sakte ho</p>
+</div>
+
+<!-- ══ BOTTOM NAV ══ -->
+<div class="bottom-nav" id="bottomNav">
+  <button class="nav-item active" onclick="showHome()" id="nav-home">
+    <div class="nav-icon-wrap"><span class="nav-icon">🏠</span><span class="nav-dot"></span></div>
+    <span class="nav-label">Ghar</span>
+  </button>
+  <button class="nav-item" onclick="startLesson('math')" id="nav-learn">
+    <div class="nav-icon-wrap"><span class="nav-icon">📚</span><span class="nav-dot"></span></div>
+    <span class="nav-label">Seekho</span>
+  </button>
+  <button class="nav-item" onclick="showPremium()" id="nav-premium">
+    <div class="nav-icon-wrap"><span class="nav-icon">👑</span><span class="nav-dot"></span></div>
+    <span class="nav-label">Premium</span>
+  </button>
+  <button class="nav-item" id="nav-profile">
+    <div class="nav-icon-wrap"><span class="nav-icon">👤</span><span class="nav-dot"></span></div>
+    <span class="nav-label">Profile</span>
+  </button>
+</div>
+
+<script>
+// ── QUESTIONS DATA ──
+const lessons = {
+  math: [
+    {
+      emoji: '🔢', question: '7 × 8 = ?', hindi: 'Saat aath kitna hoga?',
+      options: ['54', '56', '58', '48'], correct: 1,
+      explanation: 'Sahi! 7 × 8 = 56 ✓'
+    },
+    {
+      emoji: '➗', question: '48 ÷ 6 = ?', hindi: 'Aadhe ke aadhe!',
+      options: ['6', '8', '7', '9'], correct: 1,
+      explanation: 'Bilkul sahi! 48 ÷ 6 = 8 ✓'
+    },
+    {
+      emoji: '🧮', question: 'एक दर्जन = ?', hindi: 'Ek darzan mein kitne?',
+      options: ['10', '11', '12', '13'], correct: 2,
+      explanation: 'Wah! Ek darzan = 12 ✓'
+    },
+    {
+      emoji: '📐', question: 'Triangle ke kitne kon hote hain?', hindi: 'Tirkon mein kon?',
+      options: ['2', '3', '4', '5'], correct: 1,
+      explanation: 'Shabash! Triangle = 3 kon ✓'
+    },
+    {
+      emoji: '🌟', question: '100 - 37 = ?', hindi: 'Sau mein se saintis ghatao',
+      options: ['63', '67', '73', '57'], correct: 0,
+      explanation: 'Bahut accha! 100 - 37 = 63 ✓'
+    }
+  ],
+  hindi: [
+    {
+      emoji: '🐘', question: 'हाथी को English mein kya kehte hain?', hindi: 'Janvar ka naam',
+      options: ['Lion', 'Tiger', 'Elephant', 'Camel'], correct: 2,
+      explanation: 'Sahi! Haathi = Elephant ✓'
+    },
+    {
+      emoji: '☀️', question: '"सूर्य" ka arth kya hai?', hindi: 'Surya ka matlab',
+      options: ['Chand', 'Sitara', 'Suraj', 'Bijli'], correct: 2,
+      explanation: 'Bilkul! Surya = Suraj ✓'
+    },
+    {
+      emoji: '🌸', question: 'Phool ka vachan kya hoga? (Bahuvachan)', hindi: '"Phool" = ek, phir zyada?',
+      options: ['Phool', 'Phulon', 'Phoolon', 'Phulein'], correct: 2,
+      explanation: 'Wah! Phool ka bahuvachan = Phoolon ✓'
+    },
+    {
+      emoji: '📝', question: '"क + ा + म" se kaunsa shabd banega?', hindi: 'Akshar joodo',
+      options: ['Kamal', 'Kaam', 'Kam', 'Kama'], correct: 1,
+      explanation: 'Shabash! क + ा + म = काम ✓'
+    },
+    {
+      emoji: '🦁', question: 'Sher ko Hindi mein kya kahte hain?', hindi: 'Jungle ka raja',
+      options: ['Bagh', 'Singh', 'Simha', 'Sher'], correct: 3,
+      explanation: 'Sahi! Sher = सिंह ya शेर ✓'
+    }
+  ],
+  science: [
+    {
+      emoji: '🌱', question: 'Paudhe apna khana kaise banate hain?', hindi: 'Green machine!',
+      options: ['Roots se', 'Paani se', 'Photosynthesis se', 'Mitti se'], correct: 2,
+      explanation: 'Bilkul! Paudhe Photosynthesis se khana banate hain ✓'
+    }
+  ]
+};
+
+let currentSubject = 'math';
+let currentQ = 0;
+let score = 0;
+let answered = false;
+
+// ── NAVIGATION ──
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  const showNav = ['home', 'premium'].includes(id);
+  document.getElementById('bottomNav').style.display = showNav ? 'flex' : 'none';
+}
+
+function setActiveNav(id) {
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const el = document.getElementById('nav-' + id);
+  if (el) el.classList.add('active');
+}
+
+function showHome() {
+  showScreen('home');
+  setActiveNav('home');
+}
+
+function showPremium() {
+  showScreen('premium');
+  setActiveNav('premium');
+}
+
+// ── LESSON ──
+function startLesson(subject) {
+  currentSubject = subject;
+  currentQ = 0;
+  score = 0;
+  answered = false;
+  showScreen('lesson');
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const qs = lessons[currentSubject] || lessons.math;
+  const q = qs[currentQ];
+  const total = qs.length;
+  const pct = (currentQ / total) * 100;
+
+  document.getElementById('lessonProgFill').style.width = pct + '%';
+  document.getElementById('stepLabel').textContent = (currentQ + 1) + '/' + total;
+
+  document.getElementById('lessonContent').innerHTML = `
+    <div class="question-card">
+      <div class="q-emoji">${q.emoji}</div>
+      <div class="q-label">Sawaal ${currentQ + 1}</div>
+      <div class="q-text">${q.question}</div>
+      <div class="q-hindi">${q.hindi}</div>
+    </div>
+    <div class="options-grid">
+      ${q.options.map((opt, i) => `
+        <button class="option-btn" onclick="selectAnswer(${i})">${opt}</button>
+      `).join('')}
+    </div>
+    <div class="feedback-bar" id="feedbackBar"></div>
+    <button class="btn-next" id="btnNext" onclick="nextQuestion()">Aage Badho →</button>
+  `;
+  answered = false;
+}
+
+function selectAnswer(idx) {
+  if (answered) return;
+  answered = true;
+
+  const qs = lessons[currentSubject] || lessons.math;
+  const q = qs[currentQ];
+  const btns = document.querySelectorAll('.option-btn');
+  const feedback = document.getElementById('feedbackBar');
+  const btnNext = document.getElementById('btnNext');
+
+  btns.forEach((btn, i) => {
+    btn.classList.add('disabled');
+    if (i === q.correct) btn.classList.add('correct');
+    else if (i === idx && idx !== q.correct) btn.classList.add('wrong');
+  });
+
+  if (idx === q.correct) {
+    score++;
+    feedback.textContent = '✅ ' + q.explanation;
+    feedback.className = 'feedback-bar correct show';
+  } else {
+    feedback.textContent = '❌ Galat! ' + q.explanation;
+    feedback.className = 'feedback-bar wrong show';
+  }
+
+  btnNext.classList.add('show');
+}
+
+function nextQuestion() {
+  const qs = lessons[currentSubject] || lessons.math;
+  currentQ++;
+  if (currentQ >= qs.length) {
+    showResult();
+  } else {
+    renderQuestion();
+  }
+}
+
+function showResult() {
+  showScreen('result');
+  const total = (lessons[currentSubject] || lessons.math).length;
+  const xp = score * 10;
+  document.getElementById('statScore').textContent = score + '/' + total;
+  document.getElementById('statXP').textContent = '+' + xp;
+
+  if (score === total) {
+    document.getElementById('resultTrophy').textContent = '🏆';
+    document.getElementById('resultTitle').textContent = 'Perfect Score!';
+    document.getElementById('resultSub').textContent = 'Ekdum perfect! Tum bahut hoshiyar ho! 🌟';
+  } else if (score >= total * 0.6) {
+    document.getElementById('resultTrophy').textContent = '⭐';
+    document.getElementById('resultTitle').textContent = 'Shabash!';
+    document.getElementById('resultSub').textContent = 'Acha kiya! Thodi aur practice karo.';
+  } else {
+    document.getElementById('resultTrophy').textContent = '💪';
+    document.getElementById('resultTitle').textContent = 'Himmat rakho!';
+    document.getElementById('resultSub').textContent = 'Koi baat nahi — dubara try karo!';
+  }
+
+  // Confetti
+  if (score >= (lessons[currentSubject] || lessons.math).length * 0.6) {
+    const emojis = ['🎉','⭐','🌟','🎊','✨'];
+    for (let i = 0; i < 12; i++) {
+      setTimeout(() => {
+        const el = document.createElement('div');
+        el.className = 'confetti-emoji';
+        el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+        el.style.left = Math.random() * 100 + 'vw';
+        el.style.animationDuration = (1.5 + Math.random() * 2) + 's';
+        el.style.animationDelay = Math.random() * 0.5 + 's';
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 3000);
+      }, i * 100);
+    }
+  }
+}
+
+function selectPlan(el, plan) {
+  document.querySelectorAll('.plan-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+function showSubscribed() {
+  alert('🎉 Badhai ho! PadhAI Premium shuru ho gaya!\n\nAbhi saare subjects unlock ho gaye hain. Padhte raho! 📚');
+  showHome();
+}
+
+// Start on splash
+showScreen('splash');
+document.getElementById('bottomNav').style.display = 'none';
+</script>
+</body>
+</html>
